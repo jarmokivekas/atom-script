@@ -40,6 +40,18 @@ describe 'grammarMap', ->
         expect(args[0]).toEqual('-c')
         expect(args[1]).toMatch(/^xcrun clang/)
 
+      it 'returns the appropriate File Based runner on Linux', ->
+        OperatingSystem.platform = -> 'linux'
+        @reloadGrammar()
+
+        grammar = grammarMap['C']
+        fileBasedRunner = grammar['File Based']
+        args = fileBasedRunner.args(@codeContext)
+        expect(fileBasedRunner.command).toEqual('bash')
+        expect(args[0]).toEqual('-c')
+        expect(args[1]).toMatch(/^cc/)
+
+          
       it 'is not defined on other operating systems', ->
         OperatingSystem.platform = -> 'win32'
         @reloadGrammar()
